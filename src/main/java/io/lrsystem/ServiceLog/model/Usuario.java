@@ -1,14 +1,11 @@
-package io.lrsystem.ServiceLog.entities;
+package io.lrsystem.ServiceLog.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.time.OffsetDateTime;
+import lombok.Data;
 
 @Entity
-@Getter
-@Setter
+@Data
+@Table(name = "usuario")
 public class Usuario {
 
     @Id
@@ -17,6 +14,6 @@ public class Usuario {
     private String nome;
     private String email;
     private String senha;
-    private Boolean status;
-    private OffsetDateTime dataCadastro;
+    private boolean status;
+
 }

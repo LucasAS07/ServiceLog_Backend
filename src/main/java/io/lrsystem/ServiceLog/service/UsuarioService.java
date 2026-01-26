@@ -1,46 +1,49 @@
 package io.lrsystem.ServiceLog.service;
 
-import io.lrsystem.ServiceLog.dto.UsuarioDTO;
-import io.lrsystem.ServiceLog.entities.Usuario;
-import io.lrsystem.ServiceLog.exceptions.ResourceNotFoundException;
+import io.lrsystem.ServiceLog.dto.UsuarioCreateUpdateDTO;
+import io.lrsystem.ServiceLog.dto.UsuarioResponseDTO;
+import io.lrsystem.ServiceLog.mapper.UsuarioMapper;
+import io.lrsystem.ServiceLog.model.Usuario;
 import io.lrsystem.ServiceLog.repositorie.UsuarioRepositorie;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UsuarioService {
 
+    private final UsuarioMapper mapper;
+
+    public UsuarioService(UsuarioMapper mapper) {
+        this.mapper = mapper;
+    }
+
     @Autowired
     private UsuarioRepositorie usuarioRepositorie;
 
-    @Transactional
-    public Page<UsuarioDTO> list(Pageable pageable) {
-        Page<Usuario> usuarios = usuarioRepositorie.findAll(pageable);
-
-        return usuarios.map(x -> new UsuarioDTO(x));
+    public List<UsuarioResponseDTO> listar() {
+        List<Usuario> usuarios = usuarioRepositorie.findAll();
+        return mapper.usuariosToDto(usuarios);
     }
 
-    @Transactional
-    public UsuarioDTO findById(Long id) {
-        Usuario usuario = usuarioRepositorie.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Recurso não encontrado"));
-
-        return new UsuarioDTO(usuario);
+    public UsuarioResponseDTO buscar(Long usuarioId) {
+        Usuario usuario = usuarioRepositorie.findById(usuarioId).orElseThrow();
+        return mapper.usuariroToDto(usuario);
     }
 
-//    public UsuarioDTO insert() {
-//
-//    }
+    public UsuarioResponseDTO salvar(UsuarioCreateUpdateDTO usuario) {
 
-    private void copyDtoToEntity(UsuarioDTO usuarioDTO, Usuario usuario) {
-        usuario.setNome(usuarioDTO.getNome());
-        usuario.setEmail(usuarioDTO.getEmail());
-        usuario.setEmail(usuarioDTO.getEmail());
-        usuario.setStatus(usuarioDTO.isStatus());
-        usuario.setDataCadastro(usuarioDTO.getDataCadastro());
+        Usuario novoUsuario = mapper.usuarioToEntity(usuario);
+
+        Usuario usuarioSalvo = usuarioRepositorie.save(novoUsuario);
+
+        return mapper.usuariroToDto(usuarioSalvo);
     }
 
+    public void delete(Long id) {
+        UsuarioResponseDTO usuarioResponse = buscar(id);
+        Usuario usuario = mapper.toEntity(usuarioResponse);
+        usuarioRepositorie.delete(usuario);
+    }
 }
