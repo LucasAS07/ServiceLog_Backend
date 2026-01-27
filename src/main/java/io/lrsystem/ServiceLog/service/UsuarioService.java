@@ -2,6 +2,7 @@ package io.lrsystem.ServiceLog.service;
 
 import io.lrsystem.ServiceLog.dto.UsuarioCreateUpdateDTO;
 import io.lrsystem.ServiceLog.dto.UsuarioResponseDTO;
+import io.lrsystem.ServiceLog.exceptions.UsuarioNaoEncontradoException;
 import io.lrsystem.ServiceLog.mapper.UsuarioMapper;
 import io.lrsystem.ServiceLog.model.Usuario;
 import io.lrsystem.ServiceLog.repositorie.UsuarioRepositorie;
@@ -28,22 +29,27 @@ public class UsuarioService {
     }
 
     public UsuarioResponseDTO buscar(Long usuarioId) {
-        Usuario usuario = usuarioRepositorie.findById(usuarioId).orElseThrow();
+        Usuario usuario = usuarioRepositorie.findById(usuarioId).orElse(null);
         return mapper.usuariroToDto(usuario);
     }
 
-    public UsuarioResponseDTO salvar(UsuarioCreateUpdateDTO usuario) {
+    public UsuarioCreateUpdateDTO salvar(Usuario usuario) {
+        Usuario usuarioNovo = usuarioRepositorie.save(usuario);
+        UsuarioCreateUpdateDTO usuarioDto = mapper.usuarioToDto(usuarioNovo);
+        return usuarioDto;
+    }
 
-        Usuario novoUsuario = mapper.usuarioToEntity(usuario);
+    public UsuarioCreateUpdateDTO atualizar(Long id, UsuarioCreateUpdateDTO usuarioDTO) {
+        Usuario usuario = usuarioRepositorie.findById(id).orElseThrow(
+                () -> new UsuarioNaoEncontradoException("Usuario não encontrado!"));
 
-        Usuario usuarioSalvo = usuarioRepositorie.save(novoUsuario);
-
-        return mapper.usuariroToDto(usuarioSalvo);
+        mapper.atualizar(usuario,usuarioDTO);
+        usuarioRepositorie.save(usuario);
+        UsuarioCreateUpdateDTO dto = mapper.usuarioToDto(usuario);
+        return dto;
     }
 
     public void delete(Long id) {
-        UsuarioResponseDTO usuarioResponse = buscar(id);
-        Usuario usuario = mapper.toEntity(usuarioResponse);
-        usuarioRepositorie.delete(usuario);
+        usuarioRepositorie.deleteById(id);
     }
 }
