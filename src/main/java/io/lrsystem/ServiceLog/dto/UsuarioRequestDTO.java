@@ -3,7 +3,7 @@ package io.lrsystem.ServiceLog.dto;
 import lombok.Data;
 
 @Data
-public class UsuarioCreateUpdateDTO {
+public class UsuarioRequestDTO {
 
     private Long id;
     private String nome;

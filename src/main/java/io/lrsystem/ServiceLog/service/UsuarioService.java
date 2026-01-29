@@ -1,11 +1,11 @@
 package io.lrsystem.ServiceLog.service;
 
-import io.lrsystem.ServiceLog.dto.UsuarioCreateUpdateDTO;
+import io.lrsystem.ServiceLog.dto.UsuarioRequestDTO;
 import io.lrsystem.ServiceLog.dto.UsuarioResponseDTO;
 import io.lrsystem.ServiceLog.exceptions.UsuarioNaoEncontradoException;
 import io.lrsystem.ServiceLog.mapper.UsuarioMapper;
 import io.lrsystem.ServiceLog.model.Usuario;
-import io.lrsystem.ServiceLog.repositorie.UsuarioRepositorie;
+import io.lrsystem.ServiceLog.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,35 +21,35 @@ public class UsuarioService {
     }
 
     @Autowired
-    private UsuarioRepositorie usuarioRepositorie;
+    private UsuarioRepository usuarioRepository;
 
     public List<UsuarioResponseDTO> listar() {
-        List<Usuario> usuarios = usuarioRepositorie.findAll();
+        List<Usuario> usuarios = usuarioRepository.findAll();
         return mapper.usuariosToDto(usuarios);
     }
 
     public UsuarioResponseDTO buscar(Long usuarioId) {
-        Usuario usuario = usuarioRepositorie.findById(usuarioId).orElse(null);
+        Usuario usuario = usuarioRepository.findById(usuarioId).orElse(null);
         return mapper.usuariroToDto(usuario);
     }
 
-    public UsuarioCreateUpdateDTO salvar(Usuario usuario) {
-        Usuario usuarioNovo = usuarioRepositorie.save(usuario);
-        UsuarioCreateUpdateDTO usuarioDto = mapper.usuarioToDto(usuarioNovo);
+    public UsuarioRequestDTO salvar(Usuario usuario) {
+        Usuario usuarioNovo = usuarioRepository.save(usuario);
+        UsuarioRequestDTO usuarioDto = mapper.usuarioToDto(usuarioNovo);
         return usuarioDto;
     }
 
-    public UsuarioCreateUpdateDTO atualizar(Long id, UsuarioCreateUpdateDTO usuarioDTO) {
-        Usuario usuario = usuarioRepositorie.findById(id).orElseThrow(
+    public UsuarioRequestDTO atualizar(Long id, UsuarioRequestDTO usuarioDTO) {
+        Usuario usuario = usuarioRepository.findById(id).orElseThrow(
                 () -> new UsuarioNaoEncontradoException("Usuario não encontrado!"));
 
         mapper.atualizar(usuario,usuarioDTO);
-        usuarioRepositorie.save(usuario);
-        UsuarioCreateUpdateDTO dto = mapper.usuarioToDto(usuario);
+        usuarioRepository.save(usuario);
+        UsuarioRequestDTO dto = mapper.usuarioToDto(usuario);
         return dto;
     }
 
     public void delete(Long id) {
-        usuarioRepositorie.deleteById(id);
+        usuarioRepository.deleteById(id);
     }
 }

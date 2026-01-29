@@ -1,6 +1,6 @@
 package io.lrsystem.ServiceLog.mapper;
 
-import io.lrsystem.ServiceLog.dto.UsuarioCreateUpdateDTO;
+import io.lrsystem.ServiceLog.dto.UsuarioRequestDTO;
 import io.lrsystem.ServiceLog.dto.UsuarioResponseDTO;
 import io.lrsystem.ServiceLog.model.Usuario;
 import org.mapstruct.*;
@@ -16,13 +16,15 @@ public interface UsuarioMapper {
     List<UsuarioResponseDTO> usuariosToDto(List<Usuario> usuarios);
 
     @Mapping(target = "id", ignore = true)
-    Usuario usuarioToEntity(UsuarioCreateUpdateDTO usuarioCreateUpdateDTO);
+    Usuario usuarioToEntity(UsuarioRequestDTO usuarioRequestDTO);
 
     Usuario toEntity(UsuarioResponseDTO usuarioResponseDTO);
 
-    UsuarioCreateUpdateDTO usuarioToDto(Usuario usuario);
+    UsuarioRequestDTO usuarioToDto(Usuario usuario);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void atualizar(@MappingTarget Usuario usuario, UsuarioCreateUpdateDTO dto);
+    void atualizar(@MappingTarget Usuario usuario, UsuarioRequestDTO dto);
+
+
 
 }
