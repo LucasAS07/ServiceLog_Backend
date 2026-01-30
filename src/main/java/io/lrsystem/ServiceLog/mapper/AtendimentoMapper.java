@@ -3,8 +3,7 @@ package io.lrsystem.ServiceLog.mapper;
 import io.lrsystem.ServiceLog.dto.AtendimentoRequestDTO;
 import io.lrsystem.ServiceLog.dto.AtendimentoResponseDTO;
 import io.lrsystem.ServiceLog.model.Atendimento;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -41,6 +40,8 @@ public interface AtendimentoMapper {
 
     List<AtendimentoResponseDTO> toDoList(List<Atendimento> atendimentos);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void atualizar(@MappingTarget Atendimento atendimento, AtendimentoRequestDTO dto);
 
     default Duration calcularTempoTotal(LocalTime inicio, LocalTime fim) {
         return Duration.between(inicio, fim);

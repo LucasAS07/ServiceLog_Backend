@@ -2,7 +2,7 @@ package io.lrsystem.ServiceLog.service;
 
 import io.lrsystem.ServiceLog.dto.AtendimentoRequestDTO;
 import io.lrsystem.ServiceLog.dto.AtendimentoResponseDTO;
-import io.lrsystem.ServiceLog.exceptions.HorarioInvalidoException;
+import io.lrsystem.ServiceLog.exceptions.AtendimentoNaoEncontrado;
 import io.lrsystem.ServiceLog.mapper.AtendimentoMapper;
 import io.lrsystem.ServiceLog.model.Atendimento;
 import io.lrsystem.ServiceLog.model.Usuario;
@@ -11,6 +11,7 @@ import io.lrsystem.ServiceLog.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalTime;
@@ -27,11 +28,13 @@ public class AtendimentoService {
     private final AtendimentoRepository atendimentoRepository;
     private final UsuarioRepository usuarioRepository;
 
+    @Transactional(readOnly = true)
     public List<AtendimentoResponseDTO> listarPorUsuario(Long usuarioId) {
         List<Atendimento> atendimentos = atendimentoRepository.findByUsuarioId(usuarioId);
         return atendimentoMapper.toDoList(atendimentos);
     }
 
+    @Transactional
     public AtendimentoResponseDTO adicionar(AtendimentoRequestDTO dto) {
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
                 .orElseThrow(() -> new EntityNotFoundException("Usuario não encontrado"));
@@ -54,6 +57,23 @@ public class AtendimentoService {
         Atendimento atendimentoSalvo = atendimentoRepository.save(atendimento);
 
         return atendimentoMapper.toDto(atendimentoSalvo);
+    }
+
+    @Transactional
+    public AtendimentoResponseDTO atualizar(Long id, AtendimentoRequestDTO atendimentoDto) {
+        Atendimento atendimentoBusca = atendimentoRepository.findById(id)
+                .orElseThrow(() -> new AtendimentoNaoEncontrado("Atendimento não encontrado"));
+
+        atendimentoMapper.atualizar(atendimentoBusca,atendimentoDto);
+        atendimentoRepository.save(atendimentoBusca);
+        AtendimentoResponseDTO dto = atendimentoMapper.toDto(atendimentoBusca);
+
+        return dto;
+    }
+
+    @Transactional
+    public void deletar(Long id) {
+        atendimentoRepository.deleteById(id);
     }
 
     private Duration calcularTempoTotal(LocalTime inicio, LocalTime fim) {

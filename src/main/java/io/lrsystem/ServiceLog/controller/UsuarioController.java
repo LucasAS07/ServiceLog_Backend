@@ -8,6 +8,7 @@ import io.lrsystem.ServiceLog.service.AtendimentoService;
 import io.lrsystem.ServiceLog.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,9 +45,9 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioRequestDTO> atualizar(@PathVariable Long id,
+    public ResponseEntity<UsuarioResponseDTO> atualizar(@PathVariable Long id,
                                                        @RequestBody UsuarioRequestDTO usuarioDto) {
-        UsuarioRequestDTO usuario = usuarioService.atualizar(id,usuarioDto);
+        UsuarioResponseDTO usuario = usuarioService.atualizar(id,usuarioDto);
         return ResponseEntity.ok(usuario);
     }
 

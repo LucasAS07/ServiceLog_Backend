@@ -11,7 +11,7 @@ import java.util.List;
 public interface UsuarioMapper {
 
 
-    UsuarioResponseDTO usuariroToDto(Usuario usuario);
+    UsuarioResponseDTO usuarioToDtoResp(Usuario usuario);
 
     List<UsuarioResponseDTO> usuariosToDto(List<Usuario> usuarios);
 

@@ -8,6 +8,7 @@ import io.lrsystem.ServiceLog.model.Usuario;
 import io.lrsystem.ServiceLog.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,32 +24,37 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Transactional(readOnly = true)
     public List<UsuarioResponseDTO> listar() {
         List<Usuario> usuarios = usuarioRepository.findAll();
         return mapper.usuariosToDto(usuarios);
     }
 
+    @Transactional(readOnly = true)
     public UsuarioResponseDTO buscar(Long usuarioId) {
         Usuario usuario = usuarioRepository.findById(usuarioId).orElse(null);
-        return mapper.usuariroToDto(usuario);
+        return mapper.usuarioToDtoResp(usuario);
     }
 
+    @Transactional
     public UsuarioRequestDTO salvar(Usuario usuario) {
         Usuario usuarioNovo = usuarioRepository.save(usuario);
         UsuarioRequestDTO usuarioDto = mapper.usuarioToDto(usuarioNovo);
         return usuarioDto;
     }
 
-    public UsuarioRequestDTO atualizar(Long id, UsuarioRequestDTO usuarioDTO) {
+    @Transactional
+    public UsuarioResponseDTO atualizar(Long id, UsuarioRequestDTO usuarioDTO) {
         Usuario usuario = usuarioRepository.findById(id).orElseThrow(
                 () -> new UsuarioNaoEncontradoException("Usuario não encontrado!"));
 
         mapper.atualizar(usuario,usuarioDTO);
         usuarioRepository.save(usuario);
-        UsuarioRequestDTO dto = mapper.usuarioToDto(usuario);
+        UsuarioResponseDTO dto = mapper.usuarioToDtoResp(usuario);
         return dto;
     }
 
+    @Transactional
     public void delete(Long id) {
         usuarioRepository.deleteById(id);
     }

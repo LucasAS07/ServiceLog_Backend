@@ -6,10 +6,7 @@ import io.lrsystem.ServiceLog.service.AtendimentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/atendimentos")
@@ -21,6 +18,20 @@ public class AtendimentoController {
     @PostMapping
     public ResponseEntity<AtendimentoResponseDTO> salvar(@RequestBody AtendimentoRequestDTO atendimento) {
         return ResponseEntity.status(HttpStatus.CREATED).body(atendimentoService.adicionar(atendimento));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AtendimentoResponseDTO> atualizar(@PathVariable Long id,
+                                                            @RequestBody AtendimentoRequestDTO atendimentoDTO) {
+        AtendimentoResponseDTO atendimento = atendimentoService.atualizar(id,atendimentoDTO);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(atendimento);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id){
+        atendimentoService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
