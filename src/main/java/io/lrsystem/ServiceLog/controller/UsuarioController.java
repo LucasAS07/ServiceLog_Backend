@@ -3,12 +3,13 @@ package io.lrsystem.ServiceLog.controller;
 import io.lrsystem.ServiceLog.dto.AtendimentoResponseDTO;
 import io.lrsystem.ServiceLog.dto.UsuarioRequestDTO;
 import io.lrsystem.ServiceLog.dto.UsuarioResponseDTO;
+import io.lrsystem.ServiceLog.mapper.UsuarioMapper;
 import io.lrsystem.ServiceLog.model.Usuario;
 import io.lrsystem.ServiceLog.service.AtendimentoService;
 import io.lrsystem.ServiceLog.service.UsuarioService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
+
+    private final UsuarioMapper mapper;
+
+    public UsuarioController(UsuarioMapper mapper) {
+        this.mapper = mapper;
+    }
 
     @Autowired
     private UsuarioService usuarioService;
@@ -39,14 +46,14 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioRequestDTO> salvar(@RequestBody Usuario usuario) {
-        UsuarioRequestDTO novoUsuario = usuarioService.salvar(usuario);
-        return ResponseEntity.status(201).body(novoUsuario);
+    public ResponseEntity<UsuarioResponseDTO> salvar(@RequestBody @Valid UsuarioRequestDTO usuarioDTO) {
+        Usuario usuario = mapper.usuarioToEntity(usuarioDTO);
+        return ResponseEntity.status(201).body(usuarioService.salvar(usuario));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioResponseDTO> atualizar(@PathVariable Long id,
-                                                       @RequestBody UsuarioRequestDTO usuarioDto) {
+                                                       @RequestBody @Valid UsuarioRequestDTO usuarioDto) {
         UsuarioResponseDTO usuario = usuarioService.atualizar(id,usuarioDto);
         return ResponseEntity.ok(usuario);
     }

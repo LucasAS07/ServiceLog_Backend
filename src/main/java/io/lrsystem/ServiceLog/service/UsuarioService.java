@@ -37,9 +37,9 @@ public class UsuarioService {
     }
 
     @Transactional
-    public UsuarioRequestDTO salvar(Usuario usuario) {
+    public UsuarioResponseDTO salvar(Usuario usuario) {
         Usuario usuarioNovo = usuarioRepository.save(usuario);
-        UsuarioRequestDTO usuarioDto = mapper.usuarioToDto(usuarioNovo);
+        UsuarioResponseDTO usuarioDto = mapper.usuarioToDtoResp(usuarioNovo);
         return usuarioDto;
     }
 
