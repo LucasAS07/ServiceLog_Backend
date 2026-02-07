@@ -4,6 +4,7 @@ import io.lrsystem.ServiceLog.dto.AtendimentoRequestDTO;
 import io.lrsystem.ServiceLog.dto.AtendimentoResponseDTO;
 import io.lrsystem.ServiceLog.model.Atendimento;
 import org.mapstruct.*;
+import org.springframework.data.domain.Page;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -63,4 +64,7 @@ public interface AtendimentoMapper {
                 .getDisplayName(TextStyle.FULL, new Locale("pt", "BR"));
     }
 
+    default Page<AtendimentoResponseDTO> toDoList(Page<Atendimento> atendimentos) {
+        return atendimentos.map(this::toDto);
+    }
 }

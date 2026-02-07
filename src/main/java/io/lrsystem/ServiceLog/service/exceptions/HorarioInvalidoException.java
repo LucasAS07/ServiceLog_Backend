@@ -1,4 +1,4 @@
-package io.lrsystem.ServiceLog.exceptions;
+package io.lrsystem.ServiceLog.service.exceptions;
 
 public class HorarioInvalidoException extends RuntimeException{
 

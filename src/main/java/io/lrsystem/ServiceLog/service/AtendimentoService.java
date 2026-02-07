@@ -2,7 +2,7 @@ package io.lrsystem.ServiceLog.service;
 
 import io.lrsystem.ServiceLog.dto.AtendimentoRequestDTO;
 import io.lrsystem.ServiceLog.dto.AtendimentoResponseDTO;
-import io.lrsystem.ServiceLog.exceptions.AtendimentoNaoEncontrado;
+import io.lrsystem.ServiceLog.service.exceptions.AtendimentoNaoEncontrado;
 import io.lrsystem.ServiceLog.mapper.AtendimentoMapper;
 import io.lrsystem.ServiceLog.model.Atendimento;
 import io.lrsystem.ServiceLog.model.Usuario;
@@ -10,14 +10,16 @@ import io.lrsystem.ServiceLog.repository.AtendimentoRepository;
 import io.lrsystem.ServiceLog.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.format.TextStyle;
-import java.util.List;
 import java.util.Locale;
 
 @Service
@@ -29,20 +31,30 @@ public class AtendimentoService {
     private final UsuarioRepository usuarioRepository;
 
     @Transactional(readOnly = true)
-    public List<AtendimentoResponseDTO> listarPorUsuario(Long usuarioId) {
-        List<Atendimento> atendimentos = atendimentoRepository.findByUsuarioId(usuarioId);
+    public Page<AtendimentoResponseDTO> listarPorUsuario(Long usuarioId,
+                                                         LocalDate inicio,
+                                                         LocalDate fim,
+                                                         Pageable pageable) {
+
+        if (inicio != null && fim != null && fim.isBefore(inicio)){
+            throw new IllegalArgumentException("Data fim não pode ser menor que data inicio");
+        }
+
+        Page<Atendimento> atendimentos =
+                atendimentoRepository.buscarPorUsuarioEPeriodo(usuarioId,inicio,fim,pageable);
         return atendimentoMapper.toDoList(atendimentos);
     }
 
     @Transactional
     public AtendimentoResponseDTO adicionar(AtendimentoRequestDTO dto) {
+
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
                 .orElseThrow(() -> new EntityNotFoundException("Usuario não encontrado"));
 
         Atendimento atendimento = atendimentoMapper.toEntity(dto);
         atendimento.setUsuario(usuario);
 
-        atendimento.setColaborador(usuario.getNome());
+        atendimento.setColaborador(usuario.getNome()); // PEGAR O USUARIO LOGADO NO SISTEMA.
 
         atendimento.setTempoTotal(calcularTempoTotal(atendimento.getInicio(),atendimento.getFim()));
 

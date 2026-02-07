@@ -2,7 +2,7 @@ package io.lrsystem.ServiceLog.service;
 
 import io.lrsystem.ServiceLog.dto.UsuarioRequestDTO;
 import io.lrsystem.ServiceLog.dto.UsuarioResponseDTO;
-import io.lrsystem.ServiceLog.exceptions.UsuarioNaoEncontradoException;
+import io.lrsystem.ServiceLog.service.exceptions.UsuarioNaoEncontradoException;
 import io.lrsystem.ServiceLog.mapper.UsuarioMapper;
 import io.lrsystem.ServiceLog.model.Usuario;
 import io.lrsystem.ServiceLog.repository.UsuarioRepository;
@@ -32,21 +32,20 @@ public class UsuarioService {
 
     @Transactional(readOnly = true)
     public UsuarioResponseDTO buscar(Long usuarioId) {
-        Usuario usuario = usuarioRepository.findById(usuarioId).orElse(null);
+        Usuario usuario = validaBuscaUsuario(usuarioId);
         return mapper.usuarioToDtoResp(usuario);
     }
 
     @Transactional
-    public UsuarioResponseDTO salvar(Usuario usuario) {
-        Usuario usuarioNovo = usuarioRepository.save(usuario);
+    public UsuarioResponseDTO salvar(Usuario usuarioId) {
+        Usuario usuarioNovo = usuarioRepository.save(usuarioId);
         UsuarioResponseDTO usuarioDto = mapper.usuarioToDtoResp(usuarioNovo);
         return usuarioDto;
     }
 
     @Transactional
     public UsuarioResponseDTO atualizar(Long id, UsuarioRequestDTO usuarioDTO) {
-        Usuario usuario = usuarioRepository.findById(id).orElseThrow(
-                () -> new UsuarioNaoEncontradoException("Usuario não encontrado!"));
+        Usuario usuario = validaBuscaUsuario(id);
 
         mapper.atualizar(usuario,usuarioDTO);
         usuarioRepository.save(usuario);
@@ -57,5 +56,28 @@ public class UsuarioService {
     @Transactional
     public void delete(Long id) {
         usuarioRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void inativar(Long usuarioId) {
+        Usuario usuario = validaBuscaUsuario(usuarioId);
+
+        usuario.setStatus(false);
+    }
+
+    @Transactional
+    public void ativar(Long usuarioId) {
+        Usuario usuario = validaBuscaUsuario(usuarioId);
+
+        usuario.setStatus(true);
+    }
+
+    private Usuario validaBuscaUsuario(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID do usuário não pode ser nulo");
+        }
+
+        return usuarioRepository.findById(id)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado"));
     }
 }

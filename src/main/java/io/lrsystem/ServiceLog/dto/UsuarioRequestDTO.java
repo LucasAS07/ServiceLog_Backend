@@ -17,6 +17,9 @@ public class UsuarioRequestDTO {
     @Email
     @Size(max = 100)
     private String email;
+
+    @NotBlank
+    private String senha;
     private boolean status;
 
 }

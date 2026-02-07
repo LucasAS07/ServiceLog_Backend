@@ -9,9 +9,15 @@ import io.lrsystem.ServiceLog.service.AtendimentoService;
 import io.lrsystem.ServiceLog.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -64,21 +70,35 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/ativar")
-    public ResponseEntity<Void> ativar(Long id) {
-        // TODO IMPLEMENTAR ATIVAÇÃO DE USUARIO
-        return null;
+    @DeleteMapping("/{id}/ativar")
+    public ResponseEntity<Void> ativar(@PathVariable Long id) {
+        usuarioService.ativar(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/inativar")
-    public ResponseEntity<Void> inativar(Long id) {
-        // TODO IMPLEMENTAR INATIVAÇÃO DE USUARIO
-        return null;
+    @DeleteMapping("/{id}/inativar")
+    public ResponseEntity<Void> inativar(@PathVariable Long id) {
+        usuarioService.inativar(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}/atendimentos")
-    public ResponseEntity<List<AtendimentoResponseDTO>> listarAtendimentos(@PathVariable Long id) {
-        return ResponseEntity.ok(atendimentoService.listarPorUsuario(id));
+    public ResponseEntity<Page<AtendimentoResponseDTO>> listarAtendimentos(@PathVariable Long id,
+                                                                           @RequestParam(required = false)
+                                                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                                                           LocalDate inicio,
+
+                                                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                                                           LocalDate fim,
+
+                                                                           @PageableDefault(
+                                                                                   size = 20,
+                                                                                   sort = "dia",
+                                                                                   direction = Sort.Direction.ASC
+                                                                           )
+                                                                           Pageable pageable) {
+        Page<AtendimentoResponseDTO> atendimentos = atendimentoService.listarPorUsuario(id, inicio, fim, pageable);
+        return ResponseEntity.ok(atendimentos);
     }
 
 }
