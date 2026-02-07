@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -36,12 +37,14 @@ public class UsuarioController {
     @Autowired
     private AtendimentoService atendimentoService;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDTO>> listar() {
         List<UsuarioResponseDTO> usuarios = usuarioService.listar();
         return ResponseEntity.ok(usuarios);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponseDTO> buscar(@PathVariable Long id) {
         UsuarioResponseDTO usuario = usuarioService.buscar(id);
@@ -51,6 +54,7 @@ public class UsuarioController {
         return ResponseEntity.notFound().build();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public ResponseEntity<UsuarioResponseDTO> salvar(@RequestBody @Valid UsuarioRequestDTO usuarioDTO) {
         Usuario usuario = mapper.usuarioToEntity(usuarioDTO);
@@ -64,27 +68,30 @@ public class UsuarioController {
         return ResponseEntity.ok(usuario);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         usuarioService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}/ativar")
     public ResponseEntity<Void> ativar(@PathVariable Long id) {
         usuarioService.ativar(id);
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}/inativar")
     public ResponseEntity<Void> inativar(@PathVariable Long id) {
         usuarioService.inativar(id);
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN','USER')")
     @GetMapping("/{id}/atendimentos")
-    public ResponseEntity<Page<AtendimentoResponseDTO>> listarAtendimentos(@PathVariable Long id,
-                                                                           @RequestParam(required = false)
+    public ResponseEntity<Page<AtendimentoResponseDTO>> listarAtendimentos(@RequestParam(required = false)
                                                                            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
                                                                            LocalDate inicio,
 
@@ -97,7 +104,7 @@ public class UsuarioController {
                                                                                    direction = Sort.Direction.ASC
                                                                            )
                                                                            Pageable pageable) {
-        Page<AtendimentoResponseDTO> atendimentos = atendimentoService.listarPorUsuario(id, inicio, fim, pageable);
+        Page<AtendimentoResponseDTO> atendimentos = atendimentoService.listarPorUsuario(inicio, fim, pageable);
         return ResponseEntity.ok(atendimentos);
     }
 

@@ -19,8 +19,4 @@ public class AtendimentoRequestDTO {
     private LocalTime fim;
 
     private String justificativa;
-
-    @NotNull(message = "Campo obrigatorio")
-    private Long usuarioId;
-
 }

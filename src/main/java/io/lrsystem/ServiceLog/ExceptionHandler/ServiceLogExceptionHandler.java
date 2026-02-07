@@ -4,6 +4,7 @@ import io.lrsystem.ServiceLog.dto.CustomError;
 import io.lrsystem.ServiceLog.service.exceptions.AtendimentoNaoEncontrado;
 import io.lrsystem.ServiceLog.service.exceptions.HorarioInvalidoException;
 import io.lrsystem.ServiceLog.service.exceptions.UsuarioNaoEncontradoException;
+import io.lrsystem.ServiceLog.service.exceptions.UsuarioOuSenhaInvalidos;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -58,6 +59,13 @@ public class ServiceLogExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<CustomError> entidadeNotFound(EntityNotFoundException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
+        CustomError err = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(UsuarioOuSenhaInvalidos.class)
+    public ResponseEntity<CustomError> loginInvalido(UsuarioOuSenhaInvalidos e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
         CustomError err = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
