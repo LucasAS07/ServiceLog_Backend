@@ -19,13 +19,17 @@ public class Atendimento {
     private String colaborador;
     private LocalDate dia;
     private String diaDaSemana;
-    private LocalTime inicio;
-    private LocalTime fim;
+
+    @Column(name = "inicio_ts", nullable = false)
+    private LocalDateTime inicio;
+
+    @Column(name = "fim_ts", nullable = false)
+    private LocalDateTime fim;
 
     @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
     @Column(name = "tempo_total")
-
     private Duration tempoTotal;
+
     private String justificativa;
 
     @ManyToOne

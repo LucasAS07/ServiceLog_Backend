@@ -4,11 +4,17 @@ import io.lrsystem.ServiceLog.dto.AtendimentoRequestDTO;
 import io.lrsystem.ServiceLog.dto.AtendimentoResponseDTO;
 import io.lrsystem.ServiceLog.service.AtendimentoService;
 import jakarta.validation.Valid;
+import net.sf.jasperreports.engine.JRException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/atendimentos")
@@ -30,11 +36,24 @@ public class AtendimentoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(atendimento);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN','USER')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN','SCOPE_USER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id){
         atendimentoService.deletar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN','SCOPE_USER')")
+    @GetMapping("/relatorios")
+    public ResponseEntity<byte[]> folhaAtendimentos(
+                                                    @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")
+                                                    LocalDate inicio,
+                                                    @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")
+                                                    LocalDate fim) throws JRException {
+        byte[] relatorio = atendimentoService.gerarFolhaAtendimentos(inicio,fim);
+
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
+                .body(relatorio);
     }
 
 }

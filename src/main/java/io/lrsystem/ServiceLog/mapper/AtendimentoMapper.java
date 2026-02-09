@@ -36,11 +36,16 @@ public interface AtendimentoMapper {
             target = "tempoTotal",
             expression = "java(calcularTempoTotal(dto.getInicio(), dto.getFim()))"
     )
+
+    @Mapping(target = "inicio", ignore = true)
+    @Mapping(target = "fim", ignore = true)
     @Mapping(target = "dataRegistro", ignore = true)
     Atendimento toEntity(AtendimentoRequestDTO dto);
 
     List<AtendimentoResponseDTO> toDoList(List<Atendimento> atendimentos);
 
+    @Mapping(target = "inicio", ignore = true)
+    @Mapping(target = "fim", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void atualizar(@MappingTarget Atendimento atendimento, AtendimentoRequestDTO dto);
 

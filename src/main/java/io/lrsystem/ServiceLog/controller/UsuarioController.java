@@ -37,14 +37,14 @@ public class UsuarioController {
     @Autowired
     private AtendimentoService atendimentoService;
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDTO>> listar() {
         List<UsuarioResponseDTO> usuarios = usuarioService.listar();
         return ResponseEntity.ok(usuarios);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponseDTO> buscar(@PathVariable Long id) {
         UsuarioResponseDTO usuario = usuarioService.buscar(id);
@@ -54,7 +54,7 @@ public class UsuarioController {
         return ResponseEntity.notFound().build();
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @PostMapping
     public ResponseEntity<UsuarioResponseDTO> salvar(@RequestBody @Valid UsuarioRequestDTO usuarioDTO) {
         Usuario usuario = mapper.usuarioToEntity(usuarioDTO);
@@ -68,29 +68,29 @@ public class UsuarioController {
         return ResponseEntity.ok(usuario);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         usuarioService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @DeleteMapping("/{id}/ativar")
     public ResponseEntity<Void> ativar(@PathVariable Long id) {
         usuarioService.ativar(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @DeleteMapping("/{id}/inativar")
     public ResponseEntity<Void> inativar(@PathVariable Long id) {
         usuarioService.inativar(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAuthority('ADMIN','USER')")
-    @GetMapping("/{id}/atendimentos")
+    @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN','SCOPE_USER')")
+    @GetMapping("/atendimentos")
     public ResponseEntity<Page<AtendimentoResponseDTO>> listarAtendimentos(@RequestParam(required = false)
                                                                            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
                                                                            LocalDate inicio,
