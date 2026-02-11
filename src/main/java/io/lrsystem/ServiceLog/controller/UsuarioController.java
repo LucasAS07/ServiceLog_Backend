@@ -8,6 +8,7 @@ import io.lrsystem.ServiceLog.model.Usuario;
 import io.lrsystem.ServiceLog.service.AtendimentoService;
 import io.lrsystem.ServiceLog.service.UsuarioService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,13 +24,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
+@RequiredArgsConstructor
 public class UsuarioController {
 
     private final UsuarioMapper mapper;
-
-    public UsuarioController(UsuarioMapper mapper) {
-        this.mapper = mapper;
-    }
 
     @Autowired
     private UsuarioService usuarioService;

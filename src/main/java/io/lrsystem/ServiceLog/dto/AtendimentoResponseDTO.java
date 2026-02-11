@@ -1,12 +1,6 @@
 package io.lrsystem.ServiceLog.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
 
 @Data
 public class AtendimentoResponseDTO {

@@ -4,8 +4,8 @@ import io.lrsystem.ServiceLog.dto.AtendimentoRequestDTO;
 import io.lrsystem.ServiceLog.dto.AtendimentoResponseDTO;
 import io.lrsystem.ServiceLog.service.AtendimentoService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.JRException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,10 +18,10 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/atendimentos")
+@RequiredArgsConstructor
 public class AtendimentoController {
 
-    @Autowired
-    private AtendimentoService atendimentoService;
+    private final AtendimentoService atendimentoService;
 
     @PostMapping
     public ResponseEntity<AtendimentoResponseDTO> salvar(@RequestBody @Valid AtendimentoRequestDTO atendimento) {

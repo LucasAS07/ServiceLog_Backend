@@ -4,6 +4,7 @@ import io.lrsystem.ServiceLog.dto.LoginRequest;
 import io.lrsystem.ServiceLog.dto.LoginResponse;
 import io.lrsystem.ServiceLog.repository.UsuarioRepository;
 import io.lrsystem.ServiceLog.service.exceptions.UsuarioOuSenhaInvalidos;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 
 @Service
+@RequiredArgsConstructor
 public class TokenService {
 
     private final BCryptPasswordEncoder passwordEncoder;
@@ -20,13 +22,6 @@ public class TokenService {
     private final UsuarioRepository usuarioRepository;
 
     private final JwtEncoder jwtEncoder;
-
-    public TokenService(BCryptPasswordEncoder passwordEncoder, UsuarioRepository usuarioRepository,
-                        JwtEncoder jwtEncoder) {
-        this.passwordEncoder = passwordEncoder;
-        this.usuarioRepository = usuarioRepository;
-        this.jwtEncoder = jwtEncoder;
-    }
 
     public LoginResponse login(LoginRequest request) {
 

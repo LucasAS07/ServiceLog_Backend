@@ -6,6 +6,7 @@ import io.lrsystem.ServiceLog.service.exceptions.UsuarioNaoEncontradoException;
 import io.lrsystem.ServiceLog.mapper.UsuarioMapper;
 import io.lrsystem.ServiceLog.model.Usuario;
 import io.lrsystem.ServiceLog.repository.UsuarioRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,13 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UsuarioService {
 
     private final UsuarioMapper mapper;
-
-    public UsuarioService(UsuarioMapper mapper) {
-        this.mapper = mapper;
-    }
 
     @Autowired
     private UsuarioRepository usuarioRepository;
