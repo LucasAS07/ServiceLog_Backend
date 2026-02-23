@@ -3,6 +3,12 @@ package io.lrsystem.ServiceLog.controller;
 import io.lrsystem.ServiceLog.dto.AtendimentoRequestDTO;
 import io.lrsystem.ServiceLog.dto.AtendimentoResponseDTO;
 import io.lrsystem.ServiceLog.service.AtendimentoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.JRException;
@@ -19,18 +25,34 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/atendimentos")
 @RequiredArgsConstructor
+@Tag(name = "Atendimentos", description = "Gerencia os atendimentos")
 public class AtendimentoController {
 
     private final AtendimentoService atendimentoService;
 
     @PostMapping
-    public ResponseEntity<AtendimentoResponseDTO> salvar(@RequestBody @Valid AtendimentoRequestDTO atendimento) {
+    @Operation(summary = "Cadastra um novo atendimento")
+    public ResponseEntity<AtendimentoResponseDTO> salvar(@io.swagger.v3.oas.annotations.parameters.RequestBody
+                                                                     (description = "Representação de um atendimento",
+                                                                             required = true)
+                                                        @RequestBody @Valid AtendimentoRequestDTO atendimento) {
         return ResponseEntity.status(HttpStatus.CREATED).body(atendimentoService.adicionar(atendimento));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AtendimentoResponseDTO> atualizar(@PathVariable Long id,
-                                                            @RequestBody @Valid AtendimentoRequestDTO atendimentoDTO) {
+    @Operation(summary = "Atualiza um usuario",responses = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "ID do atendimento invalido",
+                    content = @Content(schema = @Schema(ref = "Problema")))
+    })
+    public ResponseEntity<AtendimentoResponseDTO> atualizar(@io.swagger.v3.oas.annotations.parameters.RequestBody
+                                                                       (description = "Representação de um atendimento",
+                                                                                required = true)
+                                                                @Parameter(description = "ID de um atendimento",
+                                                                        example = "1", required = true)
+                                                                @PathVariable Long id,
+                                                                 @RequestBody
+                                                                 @Valid AtendimentoRequestDTO atendimentoDTO) {
         AtendimentoResponseDTO atendimento = atendimentoService.atualizar(id,atendimentoDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(atendimento);
@@ -38,13 +60,21 @@ public class AtendimentoController {
 
     @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN','SCOPE_USER')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id){
+    @Operation(summary = "Exclui um usuario específico",responses = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "ID do atendimento invalido",
+                    content = @Content(schema = @Schema(ref = "Problema")))
+    })
+    public ResponseEntity<Void> deletar(@Parameter(description = "ID de um atendimento",
+                                        example = "1", required = true)
+                                            @PathVariable Long id){
         atendimentoService.deletar(id);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN','SCOPE_USER')")
     @GetMapping("/relatorios")
+    @Operation(summary = "Gera o relatorio em PDF")
     public ResponseEntity<byte[]> folhaAtendimentos(
                                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")
                                                     LocalDate inicio,
