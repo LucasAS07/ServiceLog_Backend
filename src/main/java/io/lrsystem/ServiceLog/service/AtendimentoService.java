@@ -98,7 +98,7 @@ public class AtendimentoService {
         atendimentoBusca.setInicio(inicioTs);
         atendimentoBusca.setFim(fimTs);
 
-        atendimentoBusca.setTempoTotal(Duration.between(atendimentoDto.getFim(),atendimentoDto.getFim()));
+        atendimentoBusca.setTempoTotal(Duration.between(atendimentoDto.getInicio(),atendimentoDto.getFim()));
 
         atendimentoMapper.atualizar(atendimentoBusca,atendimentoDto);
         atendimentoRepository.save(atendimentoBusca);
