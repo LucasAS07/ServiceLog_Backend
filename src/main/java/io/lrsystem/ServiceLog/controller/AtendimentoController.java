@@ -86,4 +86,11 @@ public class AtendimentoController {
                 .body(relatorio);
     }
 
+    @GetMapping("/total-dia")
+    @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN','SCOPE_USER')")
+    @Operation(summary = "Mostra o total de atendimentos feito no dia")
+    public Long totalDia() {
+        return atendimentoService.totalAtendimentosDia();
+    }
+
 }

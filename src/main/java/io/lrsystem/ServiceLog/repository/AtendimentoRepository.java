@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -50,5 +51,14 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento,Long> {
             @Param("inicio") LocalDate inicio,
             @Param("fim") LocalDate fim
     );
+
+    @Query("""
+            select
+                count(a)
+            from Atendimento a
+            where a.usuario.id = :usuarioId
+            and a.dia = :data
+            """)
+    Long findTotalDia(Long usuarioId, LocalDate data);
 
 }

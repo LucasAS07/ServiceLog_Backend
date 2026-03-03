@@ -1,5 +1,6 @@
 package io.lrsystem.ServiceLog.service;
 
+import com.sun.source.tree.InstanceOfTree;
 import io.lrsystem.ServiceLog.dto.AtendimentoRequestDTO;
 import io.lrsystem.ServiceLog.dto.AtendimentoResponseDTO;
 import io.lrsystem.ServiceLog.model.RelatorioAtendimento;
@@ -17,6 +18,7 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.apache.catalina.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -161,6 +163,13 @@ public class AtendimentoService {
         );
 
         return JasperExportManager.exportReportToPdf(jasperPrint);
+    }
+
+    @Transactional(readOnly = true)
+    public Long totalAtendimentosDia() {
+        Usuario usuario = authService.authenticated();
+        OffsetDateTime hoje = OffsetDateTime.now();
+        return atendimentoRepository.findTotalDia(usuario.getId(), hoje.toLocalDate());
     }
 
     private static void inseriTempoTotalInicioEFim(AtendimentoRequestDTO dto, Atendimento atendimento) {
