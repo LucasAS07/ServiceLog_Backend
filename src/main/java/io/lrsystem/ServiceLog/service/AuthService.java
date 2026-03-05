@@ -16,11 +16,10 @@ public class AuthService {
 
     public static final String ROLE_ADMIN = "ADMIN";
 
-    private final UsuarioService usuarioService;
     private final UsuarioRepository usuarioRepository;
 
     public void validateSelfOrAdmin(Long id) {
-        Usuario me = usuarioService.authenticated();
+        Usuario me = authenticated();
 
         if (!me.getId().equals(id) && !me.getRole().getNome().equals(ROLE_ADMIN)) {
             throw new ForbiddenException("Acesso negado");

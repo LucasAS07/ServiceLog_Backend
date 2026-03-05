@@ -2,16 +2,12 @@ package io.lrsystem.ServiceLog.service;
 
 import io.lrsystem.ServiceLog.dto.UsuarioRequestDTO;
 import io.lrsystem.ServiceLog.dto.UsuarioResponseDTO;
-import io.lrsystem.ServiceLog.service.exceptions.UsuarioNaoEncontradoException;
 import io.lrsystem.ServiceLog.mapper.UsuarioMapper;
 import io.lrsystem.ServiceLog.model.Usuario;
 import io.lrsystem.ServiceLog.repository.UsuarioRepository;
+import io.lrsystem.ServiceLog.service.exceptions.UsuarioNaoEncontradoException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,17 +77,5 @@ public class UsuarioService {
 
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado"));
-    }
-
-    protected Usuario authenticated() {
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Jwt jwtPrincipal = (Jwt) authentication.getPrincipal();
-            String userName = jwtPrincipal.getClaim("username");
-
-            return usuarioRepository.findByEmail(userName).get();
-        } catch (Exception e) {
-            throw new UsernameNotFoundException("Email não encontrado");
-        }
     }
 }
