@@ -3,6 +3,7 @@ package io.lrsystem.ServiceLog.service;
 import io.lrsystem.ServiceLog.dto.LoginRequest;
 import io.lrsystem.ServiceLog.dto.LoginResponse;
 import io.lrsystem.ServiceLog.repository.UsuarioRepository;
+import io.lrsystem.ServiceLog.service.exceptions.UsuarioInativoException;
 import io.lrsystem.ServiceLog.service.exceptions.UsuarioOuSenhaInvalidos;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,6 +30,10 @@ public class TokenService {
 
         if (usuario.isEmpty() || !usuario.get().isLoginCorrect(request,passwordEncoder)){
             throw new UsuarioOuSenhaInvalidos("Usuario ou Senha invalidos");
+        }
+
+        if (!usuario.get().isStatus()) {
+            throw new UsuarioInativoException("Usuario inativo");
         }
 
         var now = Instant.now();
