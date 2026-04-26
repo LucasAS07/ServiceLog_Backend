@@ -166,4 +166,16 @@ public class UsuarioController {
         return ResponseEntity.ok(atendimentos);
     }
 
+    @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN','SCOPE_USER')")
+    @GetMapping("/myuser")
+    @Operation(summary = "Busca um usuario específico", responses = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "ID do usuario invalido",
+                    content = @Content(schema = @Schema(ref = "Problema")))
+    })
+    public ResponseEntity<UsuarioResponseDTO> buscarMeuUsuario() {
+        UsuarioResponseDTO usuario = usuarioService.myUser();
+        return ResponseEntity.ok(usuario);
+    }
+
 }

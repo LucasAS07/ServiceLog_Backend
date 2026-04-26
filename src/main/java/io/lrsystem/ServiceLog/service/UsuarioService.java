@@ -18,6 +18,7 @@ import java.util.List;
 public class UsuarioService {
 
     private final UsuarioMapper mapper;
+    private final AuthService authService;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -68,6 +69,12 @@ public class UsuarioService {
         Usuario usuario = validaBuscaUsuario(usuarioId);
 
         usuario.setStatus(true);
+    }
+
+    public UsuarioResponseDTO myUser() {
+        Usuario usuario = authService.authenticated();
+        var meuUsuario = buscar(usuario.getId());
+        return meuUsuario;
     }
 
     private Usuario validaBuscaUsuario(Long id) {
