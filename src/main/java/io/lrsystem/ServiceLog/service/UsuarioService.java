@@ -1,13 +1,15 @@
 package io.lrsystem.ServiceLog.service;
 
-import io.lrsystem.ServiceLog.dto.UsuarioRequestDTO;
-import io.lrsystem.ServiceLog.dto.UsuarioResponseDTO;
+import io.lrsystem.ServiceLog.dto.request.UsuarioRequestDTO;
+import io.lrsystem.ServiceLog.dto.response.UsuarioResponseDTO;
 import io.lrsystem.ServiceLog.mapper.UsuarioMapper;
+import io.lrsystem.ServiceLog.model.Role;
 import io.lrsystem.ServiceLog.model.Usuario;
+import io.lrsystem.ServiceLog.repository.RoleRepository;
 import io.lrsystem.ServiceLog.repository.UsuarioRepository;
+import io.lrsystem.ServiceLog.service.exceptions.RoleNaoEncontradaException;
 import io.lrsystem.ServiceLog.service.exceptions.UsuarioNaoEncontradoException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +23,8 @@ public class UsuarioService {
     private final UsuarioMapper mapper;
     private final AuthService authService;
     private final BCryptPasswordEncoder passwordEncoder;
-
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final RoleRepository roleRepository;
 
     @Transactional(readOnly = true)
     public List<UsuarioResponseDTO> listar() {
@@ -38,11 +39,12 @@ public class UsuarioService {
     }
 
     @Transactional
-    public UsuarioResponseDTO salvar(UsuarioRequestDTO usuarioId) {
-        usuarioId.setSenha(passwordEncoder.encode(usuarioId.getSenha()));
-        Usuario usuarioNovo = usuarioRepository.save(mapper.usuarioToEntity(usuarioId));
-        UsuarioResponseDTO usuarioDto = mapper.usuarioToDtoResp(usuarioNovo);
-        return usuarioDto;
+    public UsuarioResponseDTO salvar(UsuarioRequestDTO usuario) {
+        Role role = validaBuscaRole(usuario.getRoleId());
+        Usuario usuarioNovo = mapper.usuarioToEntity(usuario);
+        usuarioNovo.setRole(role);
+        usuarioNovo.setSenha(passwordEncoder.encode(usuario.getSenha()));
+        return mapper.usuarioToDtoResp(usuarioRepository.save(usuarioNovo));
     }
 
     @Transactional
@@ -50,9 +52,10 @@ public class UsuarioService {
         Usuario usuario = validaBuscaUsuario(id);
 
         mapper.atualizar(usuario,usuarioDTO);
+        usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
+        usuario.setRole(validaBuscaRole(usuarioDTO.getRoleId()));
         usuarioRepository.save(usuario);
-        UsuarioResponseDTO dto = mapper.usuarioToDtoResp(usuario);
-        return dto;
+        return mapper.usuarioToDtoResp(usuario);
     }
 
     @Transactional
@@ -74,10 +77,10 @@ public class UsuarioService {
         usuario.setStatus(true);
     }
 
+    @Transactional
     public UsuarioResponseDTO myUser() {
         Usuario usuario = authService.authenticated();
-        var meuUsuario = buscar(usuario.getId());
-        return meuUsuario;
+        return buscar(usuario.getId());
     }
 
     private Usuario validaBuscaUsuario(Long id) {
@@ -87,5 +90,11 @@ public class UsuarioService {
 
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado"));
+    }
+
+    private Role validaBuscaRole(Long id){
+        return roleRepository.findById(id).orElseThrow(
+                () -> new RoleNaoEncontradaException("Role não encontrada")
+        );
     }
 }
