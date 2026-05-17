@@ -1,4 +1,4 @@
-package io.lrsystem.ServiceLog.dto;
+package io.lrsystem.ServiceLog.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

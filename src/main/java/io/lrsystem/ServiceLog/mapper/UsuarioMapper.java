@@ -1,7 +1,7 @@
 package io.lrsystem.ServiceLog.mapper;
 
-import io.lrsystem.ServiceLog.dto.UsuarioRequestDTO;
-import io.lrsystem.ServiceLog.dto.UsuarioResponseDTO;
+import io.lrsystem.ServiceLog.dto.request.UsuarioRequestDTO;
+import io.lrsystem.ServiceLog.dto.response.UsuarioResponseDTO;
 import io.lrsystem.ServiceLog.model.Usuario;
 import org.mapstruct.*;
 

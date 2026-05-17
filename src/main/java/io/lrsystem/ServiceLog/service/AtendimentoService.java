@@ -1,16 +1,14 @@
 package io.lrsystem.ServiceLog.service;
 
-import com.sun.source.tree.InstanceOfTree;
-import io.lrsystem.ServiceLog.dto.AtendimentoRequestDTO;
-import io.lrsystem.ServiceLog.dto.AtendimentoResponseDTO;
-import io.lrsystem.ServiceLog.model.RelatorioAtendimento;
-import io.lrsystem.ServiceLog.service.exceptions.AtendimentoNaoEncontrado;
+import io.lrsystem.ServiceLog.dto.request.AtendimentoRequestDTO;
+import io.lrsystem.ServiceLog.dto.response.AtendimentoResponseDTO;
 import io.lrsystem.ServiceLog.mapper.AtendimentoMapper;
 import io.lrsystem.ServiceLog.model.Atendimento;
+import io.lrsystem.ServiceLog.model.RelatorioAtendimento;
 import io.lrsystem.ServiceLog.model.Usuario;
 import io.lrsystem.ServiceLog.repository.AtendimentoRepository;
 import io.lrsystem.ServiceLog.repository.UsuarioRepository;
-import io.lrsystem.ServiceLog.service.exceptions.ForbiddenException;
+import io.lrsystem.ServiceLog.service.exceptions.AtendimentoNaoEncontrado;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.JRException;
@@ -18,17 +16,17 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import org.apache.catalina.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
 import java.sql.Date;
-import java.time.*;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.TextStyle;
 import java.util.*;
 
@@ -121,11 +119,10 @@ public class AtendimentoService {
         atendimentoRepository.deleteById(id);
     }
 
-    public byte[] gerarFolhaAtendimentos(LocalDate inicio, LocalDate fim) throws JRException {
-        Usuario user = authService.authenticated();
+    public byte[] gerarFolhaAtendimentos(Long usuarioId, LocalDate inicio, LocalDate fim) throws JRException {
 
         List<RelatorioAtendimento> dados =
-                atendimentoRepository.buscarPorDataEUsuario(user.getId(), inicio, fim);
+                atendimentoRepository.buscarPorDataEUsuario(usuarioId, inicio, fim);
 
         dados.sort(
                 Comparator
@@ -150,7 +147,7 @@ public class AtendimentoService {
         }
 
         Map<String, Object> parametros = new HashMap<>();
-        parametros.put("ID_USUARIO", user.getId());
+        parametros.put("ID_USUARIO", usuarioId);
         parametros.put("DT_INICIO", Date.valueOf(inicio));
         parametros.put("DT_FIM", Date.valueOf(fim));
         parametros.put("REPORT_LOCALE", new Locale("pt", "BR"));
@@ -163,6 +160,11 @@ public class AtendimentoService {
         );
 
         return JasperExportManager.exportReportToPdf(jasperPrint);
+    }
+
+    public byte[] gerarFolhaAtendimentos(LocalDate inicio, LocalDate fim) throws JRException {
+        Usuario usuario = authService.authenticated();
+        return gerarFolhaAtendimentos(usuario.getId(),inicio,fim);
     }
 
     @Transactional(readOnly = true)

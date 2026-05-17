@@ -1,10 +1,9 @@
 package io.lrsystem.ServiceLog.controller;
 
-import io.lrsystem.ServiceLog.dto.LoginRequest;
-import io.lrsystem.ServiceLog.dto.LoginResponse;
+import io.lrsystem.ServiceLog.dto.request.LoginRequest;
+import io.lrsystem.ServiceLog.dto.response.LoginResponse;
 import io.lrsystem.ServiceLog.service.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

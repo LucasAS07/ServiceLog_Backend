@@ -1,7 +1,7 @@
 package io.lrsystem.ServiceLog.mapper;
 
-import io.lrsystem.ServiceLog.dto.AtendimentoRequestDTO;
-import io.lrsystem.ServiceLog.dto.AtendimentoResponseDTO;
+import io.lrsystem.ServiceLog.dto.request.AtendimentoRequestDTO;
+import io.lrsystem.ServiceLog.dto.response.AtendimentoResponseDTO;
 import io.lrsystem.ServiceLog.model.Atendimento;
 import org.mapstruct.*;
 import org.springframework.data.domain.Page;

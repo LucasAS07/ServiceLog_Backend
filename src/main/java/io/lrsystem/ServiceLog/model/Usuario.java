@@ -1,6 +1,6 @@
 package io.lrsystem.ServiceLog.model;
 
-import io.lrsystem.ServiceLog.dto.LoginRequest;
+import io.lrsystem.ServiceLog.dto.request.LoginRequest;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.crypto.password.PasswordEncoder;

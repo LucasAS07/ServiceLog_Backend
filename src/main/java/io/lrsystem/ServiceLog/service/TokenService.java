@@ -1,7 +1,7 @@
 package io.lrsystem.ServiceLog.service;
 
-import io.lrsystem.ServiceLog.dto.LoginRequest;
-import io.lrsystem.ServiceLog.dto.LoginResponse;
+import io.lrsystem.ServiceLog.dto.request.LoginRequest;
+import io.lrsystem.ServiceLog.dto.response.LoginResponse;
 import io.lrsystem.ServiceLog.repository.UsuarioRepository;
 import io.lrsystem.ServiceLog.service.exceptions.UsuarioInativoException;
 import io.lrsystem.ServiceLog.service.exceptions.UsuarioOuSenhaInvalidos;

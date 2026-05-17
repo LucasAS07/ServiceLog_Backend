@@ -1,4 +1,4 @@
-package io.lrsystem.ServiceLog.dto;
+package io.lrsystem.ServiceLog.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
@@ -25,5 +25,8 @@ public class UsuarioRequestDTO {
 
     @Schema(example = "true")
     private boolean status;
+
+    @Schema(examples = "1")
+    private Long roleId;
 
 }

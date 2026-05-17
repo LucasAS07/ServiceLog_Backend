@@ -1,10 +1,9 @@
 package io.lrsystem.ServiceLog.controller;
 
-import io.lrsystem.ServiceLog.dto.AtendimentoResponseDTO;
-import io.lrsystem.ServiceLog.dto.UsuarioRequestDTO;
-import io.lrsystem.ServiceLog.dto.UsuarioResponseDTO;
+import io.lrsystem.ServiceLog.dto.response.AtendimentoResponseDTO;
+import io.lrsystem.ServiceLog.dto.request.UsuarioRequestDTO;
+import io.lrsystem.ServiceLog.dto.response.UsuarioResponseDTO;
 import io.lrsystem.ServiceLog.mapper.UsuarioMapper;
-import io.lrsystem.ServiceLog.model.Usuario;
 import io.lrsystem.ServiceLog.service.AtendimentoService;
 import io.lrsystem.ServiceLog.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;

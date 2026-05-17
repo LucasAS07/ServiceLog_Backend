@@ -1,7 +1,7 @@
 package io.lrsystem.ServiceLog.controller;
 
-import io.lrsystem.ServiceLog.dto.AtendimentoRequestDTO;
-import io.lrsystem.ServiceLog.dto.AtendimentoResponseDTO;
+import io.lrsystem.ServiceLog.dto.request.AtendimentoRequestDTO;
+import io.lrsystem.ServiceLog.dto.response.AtendimentoResponseDTO;
 import io.lrsystem.ServiceLog.service.AtendimentoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
