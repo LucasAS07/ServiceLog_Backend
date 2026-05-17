@@ -76,8 +76,7 @@ public class UsuarioController {
                                                                  (description = "Representação de um usuario",
                                                                  required = true)
                                                         @RequestBody @Valid UsuarioRequestDTO usuarioDTO) {
-        Usuario usuario = mapper.usuarioToEntity(usuarioDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.salvar(usuario));
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.salvar(usuarioDTO));
     }
 
     @PutMapping("/{id}")

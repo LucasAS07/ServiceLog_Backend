@@ -8,6 +8,7 @@ import io.lrsystem.ServiceLog.repository.UsuarioRepository;
 import io.lrsystem.ServiceLog.service.exceptions.UsuarioNaoEncontradoException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ public class UsuarioService {
 
     private final UsuarioMapper mapper;
     private final AuthService authService;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -36,8 +38,9 @@ public class UsuarioService {
     }
 
     @Transactional
-    public UsuarioResponseDTO salvar(Usuario usuarioId) {
-        Usuario usuarioNovo = usuarioRepository.save(usuarioId);
+    public UsuarioResponseDTO salvar(UsuarioRequestDTO usuarioId) {
+        usuarioId.setSenha(passwordEncoder.encode(usuarioId.getSenha()));
+        Usuario usuarioNovo = usuarioRepository.save(mapper.usuarioToEntity(usuarioId));
         UsuarioResponseDTO usuarioDto = mapper.usuarioToDtoResp(usuarioNovo);
         return usuarioDto;
     }
