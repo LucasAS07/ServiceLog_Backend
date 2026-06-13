@@ -38,17 +38,28 @@ public class SecurityConfig {
     @Value("${jwt.private_key}")
     private RSAPrivateKey privateKey;
 
+    private static final String[] AUTH_ACTUATOR = {
+            "/actuator",
+            "/actuator/info",
+            "/actuator/health",
+            "/actuator/metrics",
+            "/actuator/scheduledtasks"
+    };
+
+    private static final String[] AUTH_SWAGGER = {
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/swagger-ui.html"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
-                        .requestMatchers(
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/swagger-ui.html"
-                        ).permitAll()
+                        .requestMatchers(AUTH_SWAGGER).permitAll()
+                        .requestMatchers(AUTH_ACTUATOR).permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.disable())
