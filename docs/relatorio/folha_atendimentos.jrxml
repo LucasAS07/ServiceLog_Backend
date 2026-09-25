@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 7.0.2.final using JasperReports Library version 6.20.1  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="folha_atendimentos" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1b88fbc0-9ee9-4bdd-a855-da5667257383">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="folha_atendimentos" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1b88fbc0-9ee9-4bdd-a855-da5667257383">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ServiceLog"/>
 	<parameter name="DT_INICIO" class="java.util.Date"/>
@@ -213,11 +213,12 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="31" splitType="Stretch">
+		<band height="19" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="118" height="30" uuid="2533d6de-d851-4f53-8806-d7834df9008f">
+				<reportElement x="0" y="0" width="118" height="19" uuid="2533d6de-d851-4f53-8806-d7834df9008f">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="fdab1832-8824-4ff3-8ba7-17b58f4a33cc"/>
 					<property name="com.jaspersoft.studio.unit.tabStopWidth" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box padding="5">
 					<pen lineWidth="1.0"/>
@@ -226,14 +227,14 @@
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font fontName="Times New Roman" size="9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="7"/>
 					<paragraph tabStopWidth="30"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{colaborador}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM">
-				<reportElement x="118" y="0" width="51" height="30" uuid="731dddb1-416f-4888-8ca3-ee9b250039e0">
+				<reportElement x="118" y="0" width="51" height="19" uuid="731dddb1-416f-4888-8ca3-ee9b250039e0">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d4c58bf7-e68b-4154-b09f-80b676736460"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -249,7 +250,7 @@
 				<textFieldExpression><![CDATA[$F{dia}.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM"))]]></textFieldExpression>
 			</textField>
 			<textField pattern="HH:mm">
-				<reportElement x="315" y="0" width="47" height="30" uuid="1684044c-71e6-4691-8d4b-9299e432e74f">
+				<reportElement x="315" y="0" width="47" height="19" uuid="1684044c-71e6-4691-8d4b-9299e432e74f">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b5b8297c-a692-4a6e-af88-52201bfb2f1f"/>
 				</reportElement>
 				<box>
@@ -268,7 +269,7 @@
 )]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="362" y="0" width="316" height="30" uuid="a729ee11-a282-40e8-abe7-dc3b51af4c8b">
+				<reportElement x="362" y="0" width="316" height="19" uuid="a729ee11-a282-40e8-abe7-dc3b51af4c8b">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e4e5f8a5-4b36-4997-9b79-bf2a2b5f8535"/>
 				</reportElement>
 				<box padding="3">
@@ -283,13 +284,15 @@
 				<textFieldExpression><![CDATA[$F{justificativa}]]></textFieldExpression>
 			</textField>
 			<rectangle>
-				<reportElement x="678" y="0" width="61" height="30" uuid="f715447f-937e-4ee6-aa1a-0a603f5b22a4"/>
+				<reportElement x="678" y="0" width="61" height="19" uuid="f715447f-937e-4ee6-aa1a-0a603f5b22a4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 			</rectangle>
 			<rectangle>
-				<reportElement x="739" y="0" width="62" height="30" uuid="f69f0ea9-9b68-47c3-ac6c-b04a254fd72f"/>
+				<reportElement x="739" y="0" width="62" height="19" uuid="f69f0ea9-9b68-47c3-ac6c-b04a254fd72f"/>
 			</rectangle>
 			<textField pattern="HH:mm">
-				<reportElement x="240" y="0" width="39" height="30" uuid="6398d7f7-09a9-47b4-97ff-0c9035ce10db">
+				<reportElement x="240" y="0" width="39" height="19" uuid="6398d7f7-09a9-47b4-97ff-0c9035ce10db">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7de328c4-a4a6-44ae-aa0f-765bca7b629c"/>
 				</reportElement>
 				<box>
@@ -302,7 +305,7 @@
 				<textFieldExpression><![CDATA[$F{inicio}.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"))]]></textFieldExpression>
 			</textField>
 			<textField pattern="HH:mm">
-				<reportElement x="279" y="0" width="36" height="30" uuid="9ac89605-1d0b-4bac-9ad3-c6c8a4aefe8f">
+				<reportElement x="279" y="0" width="36" height="19" uuid="9ac89605-1d0b-4bac-9ad3-c6c8a4aefe8f">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a51e491c-e0b1-4a9b-a29d-8b7cb1b0a45d"/>
 				</reportElement>
 				<box>
@@ -314,7 +317,7 @@
 				<textFieldExpression><![CDATA[$F{fim}.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"))]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="169" y="0" width="71" height="30" uuid="b74ef8b1-37db-4b74-9a2a-e99cef7a517a">
+				<reportElement x="169" y="0" width="71" height="19" uuid="b74ef8b1-37db-4b74-9a2a-e99cef7a517a">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4f9ca793-e4aa-4452-842f-d91b51cb930e"/>
 				</reportElement>
 				<box>

@@ -37,7 +37,7 @@ public class TokenService {
         }
 
         var now = Instant.now();
-        var expiresIn = 300L;
+        var expiresIn = 43_200L;
 
         var scopes = usuario.get().getRole().getNome();
 
